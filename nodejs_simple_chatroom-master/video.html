@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>      
+      var socket = io();
+      $(document).ready(function(){
+
+        //監聽新訊息事件
+        socket.on('chat message', function(data){
+          printMsg(data);
+        });
+      });
+    </script>
+  </head>
+  <body style="background-color: black">
+    <canvas id="demoCanvas" width="1920" height="1080"></canvas>
+    <input type="text" id="word" name="word" value="" style="display:none">
+    <button onclick="print();" style="display:none">Print Word</button>
+    <script type="text/javascript">
+      var stage = new createjs.Stage("demoCanvas");
+      var dict = [];
+      createjs.Ticker.addEventListener("tick",handleTick);
+      createjs.Ticker.setFPS(20);
+      
+      // function init() {
+      //   var default = ["好想回家","嗨","我不會回家欸","你在幹嘛","我好想你","吃飯沒","你很煩欸"];
+      //   for(i=0;i<default.length;i++) {
+      //     printWord = new createjs.Text(word,"20px Arial", "#fff");
+      //     printWord.x = x;
+      //     printWord.y = y;
+      //     printWord.shadow = new createjs.Shadow("#fff", 0, 0, 10);
+      //     printWord.scaleX = printWord.scaleY = Math.random() * 5 + 0.5;
+      //     // printWord.color = getRandomColor();
+      //     dict.push(printWord);
+      //     stage.addChild(printWord);
+
+      //   }
+      // }
+
+      function printMsg(inputText) {
+        // var word = document.getElementById("word").value;
+        var word = inputText;
+        var x = Math.floor((Math.random() * 1000) + 1);
+        var y = Math.floor((Math.random() * 1000) + 1);
+        document.getElementById("word").value = "";
+        printWord = new createjs.Text(word,"20px Arial", "#fff");
+        printWord.x = x;
+        printWord.y = y;
+        printWord.shadow = new createjs.Shadow("#fff", 0, 0, 10);
+        printWord.scaleX = printWord.scaleY = Math.random() * 5 + 0.5;
+        // printWord.color = getRandomColor();
+        dict.push(printWord);
+        stage.addChild(printWord);
+        stage.update();
+        console.log(printWord);
+      }
+
+      function handleTick() {
+        for(i=0;i<dict.length;i++) {
+          var speed = Math.floor((Math.random() * 3) + 1);
+          if(dict[i].x > 1920) {
+            dict[i].x = -100;
+            dict[i].y = Math.floor((Math.random() * 1000) + 1);
+          }
+          dict[i].x += speed;
+        }
+        stage.update();
+      }
+
+      function getRandomColor() {
+        var palette = ["#872a57","#f3efec","#9a8ebc","#e5c298","#ea8782"];
+        var color = palette[Math.floor(Math.random() * 5)];
+        return color;
+      }
+    </script>
+  </body>
+</html>

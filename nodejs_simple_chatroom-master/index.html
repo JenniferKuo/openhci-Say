@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $(document).ready(function(){
+
+        //監聽新訊息事件
+        socket.on('chat message', function(data){
+          console.log(data.username+":"+data.msg);
+        });
+
+        $('#send').click(function(){
+          var text = $('#m').val();
+          socket.emit('chat message', text);
+          $('#m').val('');
+          return false;
+        });
+
+        $("#m").keydown(function(event){
+          if ( event.which == 13 ){
+            $('#send').click();
+          }
+        });
+      });
+      
+    </script>
+  </head>
+  <body>
+    <input id="m" autocomplete="off" />
+    <button id="send">Send</button>
+  </body>
+</html>
